@@ -6,10 +6,10 @@
   "scripts": {
     "install-server": "npm install --prefix server",
     "install-client": "npm install --prefix client",
-    "install": "concurrently 'npm:install-server' 'npm:install-client'",
+    "install": "concurrently --unsafe-perm=true 'npm:install-server' 'npm:install-client'",
     "server": "npm run watch --prefix server",
     "client": "npm start --prefix client",
-    "watch": "concurrently 'npm:server' 'npm:client' ",
+    "watch": "concurrently --unsafe-perm=true 'npm:server' 'npm:client' ",
     "deploy": "npm run build --prefix client && npm start --prefix server",
     "deploy-cluster": "npm run build --prefix client && npm run cluster --prefix server",
     "test": "npm test --prefix server && npm test --prefix client"
