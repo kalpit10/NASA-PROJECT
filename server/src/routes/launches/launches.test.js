@@ -2,12 +2,14 @@ const request = require("supertest");
 const app = require("../../app.js");
 
 const { mongoConnect, mongoDisconnect } = require("../../services/mongo.js");
+const { loadPlanetsData } = require("../../models/planets.model.js");
 
 //we have written all our tests in one single main describe function
 describe(`Launches API`, () => {
   //before all tests just setup the mongodb
   beforeAll(async () => {
     await mongoConnect();
+    await loadPlanetsData();
   });
 
   //after all the tests have passed, exit it(this all is done to save some errors)
