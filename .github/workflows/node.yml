@@ -1,42 +1,30 @@
-# name: NASA Project CI
-# # Control when this workflow will run
-# on:
-#   push:
-#     # This workflow will be triggered when the code is pushed through one of these branches
-#     branches: [master]
-#     # To catch pull requests, where someone just pushes a change, so to trigger that
-#     pull_request:
-#       branches: [master]
-# jobs:
-#   build:
-#     runs-on: windows-latest
-#     steps:
-#       # Checking the latest version
-#       - uses: actions/checkout@v3
-#       # Check whether node is setup and installed
-#       - name: Use Node.js version 16
-#         uses: actions/setup-node@v3
-#         # Telling the version of the node ourself
-#         with:
-#           node-version: "16"
-#       - run: npm install
-#       # For client also we have to run our build
-#       - run: npm run build --prefix client
 
 name: NASA Project CI
-on:
-  push:
+on:  # Control when this workflow will run
+  push:  # This workflow will be triggered when the code is pushed through one of these branches
     branches: [ main ]
-  pull_request:
+  pull_request:  # To catch pull requests, where someone just pushes a change, so to trigger that
     branches: [ main ]
 jobs:
   build:
+    env:
+      CI: true #create-react-app test script will know that we are running in CI env, and disable watch mode
+      MONGO_URL: mongodb://localhost/nasa
+    strategy: #We can run our tests and jobs in different env by this strategy option
+      matrix: #It will give us options of these under below
+        node-version: [14.x, 16.x]
+        mongodb-version: ['4.4']
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js version 16
+      - uses: actions/checkout@v2   # Checking the latest version
+      - name: Use Node.js version ${{ matrix.node-version }}  # Check whether node is setup and installed
         uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: ${{ matrix.node-version }}
+      - name: Use MongoDB from GitHub actions
+        uses: supercharge/mongodb-github-action@1.6.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
       - run: npm install
-      - run: npm run build --prefix client
+      - run: npm run build --prefix client   # For client also we have to run our build
+      - run: npm test
