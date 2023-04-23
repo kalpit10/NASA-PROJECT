@@ -13,7 +13,7 @@
   "scripts": {
     "start": "npx react-scripts start",
     "build": "set BUILD_PATH=../server/public&& npx react-scripts build",
-    "test": "npx react-scripts test",
+    "test": "npx react-scripts test --passWithNoTests",
     "eject": "npx react-scripts eject"
   },
   "eslintConfig": {
